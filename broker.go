@@ -493,6 +493,7 @@ func (b *Broker) Produce(request *ProduceRequest) (*ProduceResponse, error) {
 
 // Fetch returns a FetchResponse or error
 func (b *Broker) Fetch(request *FetchRequest) (*FetchResponse, error) {
+	fmt.Println("== sarama ==> broker fetch")
 	defer func() {
 		if b.fetchRate != nil {
 			b.fetchRate.Mark(1)
@@ -514,6 +515,7 @@ func (b *Broker) Fetch(request *FetchRequest) (*FetchResponse, error) {
 
 // CommitOffset return an Offset commit response or error
 func (b *Broker) CommitOffset(request *OffsetCommitRequest) (*OffsetCommitResponse, error) {
+	fmt.Println("== sarama ==> broker commit_offset")
 	response := new(OffsetCommitResponse)
 
 	err := b.sendAndReceive(request, response)
@@ -526,6 +528,7 @@ func (b *Broker) CommitOffset(request *OffsetCommitRequest) (*OffsetCommitRespon
 
 // FetchOffset returns an offset fetch response or error
 func (b *Broker) FetchOffset(request *OffsetFetchRequest) (*OffsetFetchResponse, error) {
+	fmt.Println("== sarama ==> broker fetch_offset")
 	response := new(OffsetFetchResponse)
 	response.Version = request.Version // needed to handle the two header versions
 
@@ -539,6 +542,7 @@ func (b *Broker) FetchOffset(request *OffsetFetchRequest) (*OffsetFetchResponse,
 
 // JoinGroup returns a join group response or error
 func (b *Broker) JoinGroup(request *JoinGroupRequest) (*JoinGroupResponse, error) {
+	fmt.Println("== sarama ==> broker join_group")
 	response := new(JoinGroupResponse)
 
 	err := b.sendAndReceive(request, response)
@@ -551,6 +555,7 @@ func (b *Broker) JoinGroup(request *JoinGroupRequest) (*JoinGroupResponse, error
 
 // SyncGroup returns a sync group response or error
 func (b *Broker) SyncGroup(request *SyncGroupRequest) (*SyncGroupResponse, error) {
+	fmt.Println("== sarama ==> broker sync_group")
 	response := new(SyncGroupResponse)
 
 	err := b.sendAndReceive(request, response)
@@ -563,6 +568,7 @@ func (b *Broker) SyncGroup(request *SyncGroupRequest) (*SyncGroupResponse, error
 
 // LeaveGroup return a leave group response or error
 func (b *Broker) LeaveGroup(request *LeaveGroupRequest) (*LeaveGroupResponse, error) {
+	fmt.Println("== sarama ==> broker leave_group")
 	response := new(LeaveGroupResponse)
 
 	err := b.sendAndReceive(request, response)
@@ -575,6 +581,7 @@ func (b *Broker) LeaveGroup(request *LeaveGroupRequest) (*LeaveGroupResponse, er
 
 // Heartbeat returns a heartbeat response or error
 func (b *Broker) Heartbeat(request *HeartbeatRequest) (*HeartbeatResponse, error) {
+	fmt.Println("== sarama ==> broker heart_beat")
 	response := new(HeartbeatResponse)
 
 	err := b.sendAndReceive(request, response)

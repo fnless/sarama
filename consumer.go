@@ -572,6 +572,7 @@ func (child *partitionConsumer) responseFeeder() {
 
 feederLoop:
 	for response := range child.feeder {
+		fmt.Println("== sarama ==> brokerConsumer receive the feed")
 		msgs, child.responseResult = child.parseResponse(response)
 
 		if child.responseResult == nil {
@@ -588,11 +589,13 @@ feederLoop:
 			case child.messages <- msg:
 				firstAttempt = true
 			case <-expiryTicker.C:
+				fmt.Println("== sarama ==> brokerConsumer receive the feed <-expiryTicker.C")
 				if !firstAttempt {
 					child.responseResult = errTimedOut
 					child.broker.acks.Done()
 				remainingLoop:
 					for _, msg = range msgs[i:] {
+						fmt.Println("== sarama ==> brokerConsumer receive the feed <-expiryTicker.C")
 						child.interceptors(msg)
 						select {
 						case child.messages <- msg:
@@ -923,6 +926,7 @@ func (bc *brokerConsumer) subscriptionManager() {
 // this is the main loop that fetches Kafka messages
 func (bc *brokerConsumer) subscriptionConsumer() {
 	for newSubscriptions := range bc.newSubscriptions {
+		fmt.Println("== sarama ==> brokerConsumer newSub here")
 		bc.updateSubscriptions(newSubscriptions)
 
 		if len(bc.subscriptions) == 0 {
@@ -957,8 +961,9 @@ func (bc *brokerConsumer) subscriptionConsumer() {
 				bc.acks.Done()
 				continue
 			}
-
+			fmt.Println("== sarama ==> brokerConsumer start to feed")
 			child.feeder <- response
+			fmt.Println("== sarama ==> brokerConsumer end to feed")
 		}
 		bc.acks.Wait()
 		bc.handleResponses()
@@ -1132,5 +1137,6 @@ func (bc *brokerConsumer) fetchNewMessages() (*FetchResponse, error) {
 		return nil, nil
 	}
 
+	fmt.Println("== sarama ==> brokerConsumer trigger fetch")
 	return bc.broker.Fetch(request)
 }
